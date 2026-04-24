@@ -159,7 +159,7 @@ const DATA = {
                 },
                 {
                     nombre: "\"Carbono\" (O₂)",
-                    tipo: "Gas / Molécula impostora",
+                    tipo: "Gas",
                     origen: "Fotólisis del agua",
                     destino: "Fotorrespiración",
                     func: "Interferir con la fijación de carbono",
@@ -221,7 +221,7 @@ const DATA = {
             desc: "Esta es la zona VIP. Aquí liberamos CO₂ puro para RUBISCO. ¡Prohibido el paso al Oxígeno — o habrá fotorrespiración y la planta sufrirá!",
             visitantes: [
                 {
-                    nombre: "Malato Impostor",
+                    nombre: "Malato",
                     tipo: "Ácido Orgánico de 3 carbonos",
                     origen: "Reacción de fijación en el Citoplasma del Mesófilo",
                     destino: "Centro de descarboxilación interno",
@@ -296,7 +296,7 @@ const DATA = {
                     origen: "Vía metabólica secundaria",
                     destino: "Mitocondrias de la vaina",
                     func: "Sustitución por estrés hídrico — no autorizada",
-                    auth: "PROTOCOLO DE EMERGENCIA — NO VERIFICADO",
+                    auth: "Protocolo de emergencia",
                     real: false,
                     imgSrc: "amino.png",
                     faIcon: "fa-triangle-exclamation",
