@@ -1,0 +1,87 @@
+/* ══════════════════════════════════════
+   FUENTES LOCALES — sin dependencia de internet
+   Coloca esta carpeta "fonts/" en la raíz de tu proyecto
+   e importa este archivo en styles.css (primera línea)
+══════════════════════════════════════ */
+
+/* Caveat */
+@font-face {
+  font-family: 'Caveat';
+  src: url('./fonts/caveat-400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Caveat';
+  src: url('./fonts/caveat-600.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Caveat';
+  src: url('./fonts/caveat-700.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Kalam */
+@font-face {
+  font-family: 'Kalam';
+  src: url('./fonts/kalam-300.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Kalam';
+  src: url('./fonts/kalam-400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Kalam';
+  src: url('./fonts/kalam-700.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Patrick Hand */
+@font-face {
+  font-family: 'Patrick Hand';
+  src: url('./fonts/patrick-hand-400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Permanent Marker */
+@font-face {
+  font-family: 'Permanent Marker';
+  src: url('./fonts/permanent-marker-400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Special Elite */
+@font-face {
+  font-family: 'Special Elite';
+  src: url('./fonts/special-elite-400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Indie Flower */
+@font-face {
+  font-family: 'Indie Flower';
+  src: url('./fonts/indie-flower-400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}

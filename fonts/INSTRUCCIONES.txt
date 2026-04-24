@@ -1,0 +1,29 @@
+════════════════════════════════════════════
+  FUENTES LOCALES — Guardia de la Hoja C4
+════════════════════════════════════════════
+
+PASO 1: Copia la carpeta "fonts/" a la raíz de tu proyecto
+         (junto a index.html, styles.css, game.js)
+
+PASO 2: En styles.css, REEMPLAZA las dos primeras líneas:
+
+  BORRAR esto:
+  ─────────────────────────────────────────
+  @import url('https://fonts.googleapis.com/css2?family=Caveat...');
+
+  PONER esto en su lugar:
+  ─────────────────────────────────────────
+  @import url('./fonts/fonts.css');
+
+PASO 3: En index.html, BORRA los 3 tags de Google Fonts del <head>:
+
+  BORRAR:
+  ─────────────────────────────────────────
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat..." rel="stylesheet">
+
+PASO 4: Sube todo a Vercel normalmente (git push).
+
+✓ El juego funcionará sin internet después de la primera carga.
+════════════════════════════════════════════

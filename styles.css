@@ -1,0 +1,1309 @@
+@import url('./fonts/fonts.css');
+
+/* ══════════════════════════════════════
+   VARIABLES — Cuaderno de botánico
+══════════════════════════════════════ */
+:root,
+[data-theme="light"] {
+  --paper:        #FDF6E3;
+  --paper-2:      #F9EFD0;
+  --paper-3:      #F4E6B8;
+  --paper-line:   rgba(100,140,200,0.15);
+  --ink:          #2C1F0E;
+  --ink-soft:     #4A3520;
+  --ink-faded:    #8A7050;
+  --ink-blue:     #1A3A5C;
+  --green:        #3A6B25;
+  --green-mid:    #5A8A35;
+  --green-light:  #82B05A;
+  --green-pale:   #C4DFA0;
+  --amber:        #C07828;
+  --amber-light:  #E8A030;
+  --amber-pale:   #FBE8B8;
+  --red:          #9A2828;
+  --red-light:    #C84040;
+  --red-pale:     #F5CACA;
+  --tape:         rgba(220,200,140,0.55);
+  --border:       rgba(100,80,40,0.25);
+  --border-strong:#A07840;
+  --shadow:       rgba(60,40,10,0.18);
+  --bg-outer:     #5C4020;
+  --desk-wood:    #3A2810;
+  --wipe:         #FDF6E3;
+  --badge-green:  #2A5A18;
+  --hud-bg:       rgba(58,107,37,0.92);
+  --hud-text:     #E8F5D0;
+  /* Aliases usados por game.js en animaciones */
+  --green-leaf:   #3A6B25;
+  --green-deep:   #2A5018;
+  --red-mid:      #C84040;
+  --red-dark:     #8A1818;
+}
+
+[data-theme="dark"] {
+  --paper:        #1A2218;
+  --paper-2:      #1E2A1C;
+  --paper-3:      #243022;
+  --paper-line:   rgba(80,160,80,0.1);
+  --ink:          #D0E8B0;
+  --ink-soft:     #A8C880;
+  --ink-faded:    #6A9050;
+  --ink-blue:     #80C0E0;
+  --green:        #70C040;
+  --green-mid:    #58A030;
+  --green-light:  #90D060;
+  --green-pale:   #C0E890;
+  --amber:        #E8A030;
+  --amber-light:  #F8C060;
+  --amber-pale:   #2A2010;
+  --red:          #F07070;
+  --red-light:    #E85050;
+  --red-pale:     #380A0A;
+  --tape:         rgba(40,60,30,0.6);
+  --border:       rgba(80,140,60,0.25);
+  --border-strong:#4A8030;
+  --shadow:       rgba(0,0,0,0.45);
+  --bg-outer:     #080C06;
+  --desk-wood:    #0C1008;
+  --wipe:         #1A2218;
+  --badge-green:  #3A8020;
+  --hud-bg:       rgba(20,40,15,0.96);
+  --hud-text:     #B0D880;
+  /* Aliases usados por game.js en animaciones */
+  --green-leaf:   #70C040;
+  --green-deep:   #90D060;
+  --red-mid:      #E85050;
+  --red-dark:     #F07070;
+}
+
+/* ══════════════════════════════════════
+   RESET
+══════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+body {
+  background: var(--bg-outer);
+  background-image:
+    radial-gradient(ellipse at 30% 70%, rgba(80,50,10,0.4) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(40,70,10,0.3) 0%, transparent 50%);
+  color: var(--ink);
+  font-family: 'Kalam', cursive;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* FIX: usar dvh para que funcione en todos los zooms y dispositivos */
+  min-height: 100dvh;
+  height: 100dvh;
+  padding: 12px;
+  cursor: default;
+  transition: background 0.4s;
+  overflow: hidden;
+}
+
+/* ══════════════════════════════════════
+   WIPE
+══════════════════════════════════════ */
+#wipe-overlay {
+  position: fixed; inset: 0;
+  background: var(--wipe);
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0;
+  transform: scaleY(0);
+  transform-origin: top;
+}
+
+/* ══════════════════════════════════════
+   THEME TOGGLE
+══════════════════════════════════════ */
+#theme-toggle {
+  position: absolute;
+  bottom: 10px;
+  left: 14px;
+  z-index: 300;
+  background: none;
+  border: 1.5px dashed var(--border-strong);
+  border-radius: 20px;
+  padding: 4px 11px;
+  font-family: 'Patrick Hand', cursive;
+  font-size: 13px;
+  color: var(--ink-faded);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  opacity: 0.7;
+  transition: all 0.2s;
+}
+#theme-toggle:hover { opacity: 1; background: var(--paper-2); }
+/* Ocultar en desktop Y móvil mientras el juego está activo.
+   JS debe hacer: document.body.classList.add('game-running') en startGame()
+                  document.body.classList.remove('game-running') en endGame()  */
+body.game-running #theme-toggle { display: none !important; }
+
+/* ══════════════════════════════════════
+   GAME CONTAINER
+   FIX PRINCIPAL: usar altura fija basada en dvh,
+   no max-height. Esto garantiza que el layout
+   interno (grid) tenga una referencia real.
+══════════════════════════════════════ */
+#game-container {
+  width: min(1040px, 100%);
+  /* FIX: altura fija para que el grid interno funcione */
+  height: calc(100dvh - 24px);
+  max-height: calc(100dvh - 24px);
+  position: relative;
+  background: var(--paper);
+  border-radius: 4px 12px 12px 4px;
+  box-shadow:
+    0 0 0 3px var(--paper-3),
+    0 0 0 5px var(--border-strong),
+    8px 8px 0 var(--desk-wood),
+    16px 16px 40px rgba(0,0,0,0.5);
+  /* FIX: hidden recorta, pero ahora el contenido cabe exacto */
+  overflow: hidden;
+  transition: background 0.4s;
+  /* FIX: flex column para que screens y main-game ocupen todo */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Margen izquierdo de cuaderno */
+#game-container::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 52px;
+  background: var(--paper-2);
+  border-right: 2px solid rgba(200,100,100,0.2);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Líneas horizontales de cuaderno */
+#game-container::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(
+      180deg,
+      transparent 0px, transparent 31px,
+      var(--paper-line) 31px, var(--paper-line) 32px
+    );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Perforaciones espiral */
+.spiral-holes {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 52px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  padding: 20px 0;
+  z-index: 10;
+  pointer-events: none;
+}
+.spiral-hole {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--bg-outer);
+  border: 2px solid var(--border-strong);
+  flex-shrink: 0;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
+}
+
+/* ══════════════════════════════════════
+   SCREENS
+   FIX: position absolute sobre el contenedor,
+   que ahora tiene altura definida
+══════════════════════════════════════ */
+.screen {
+  position: absolute;
+  inset: 0;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 30px 60px 30px 80px;
+  z-index: 50;
+  /* FIX: scroll interno si el contenido no cabe en zooms extremos */
+  overflow-y: auto;
+}
+.screen.active { display: flex; }
+
+/* ══════════════════════════════════════
+   START SCREEN
+══════════════════════════════════════ */
+#screen-start {
+  gap: 10px;
+}
+
+.leaf-deco {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0.12;
+  filter: none;
+}
+.leaf-deco.tl { top: 16px; left: 60px; }
+.leaf-deco.br { bottom: 30px; right: 20px; transform: rotate(180deg); }
+.leaf-deco.tr { top: 20px; right: 20px; transform: scaleX(-1) rotate(-20deg); }
+
+.title-eyebrow {
+  font-family: 'Patrick Hand', cursive;
+  font-size: 13px;
+  letter-spacing: 4px;
+  color: var(--ink-faded);
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.title-main {
+  font-family: 'Permanent Marker', cursive;
+  font-size: clamp(36px, 6vw, 72px);
+  color: var(--green);
+  line-height: 0.95;
+  text-shadow: 3px 3px 0 var(--paper-3), 5px 5px 15px var(--shadow);
+  position: relative;
+}
+
+.title-main::after {
+  content: '';
+  display: block;
+  width: 70%;
+  height: 3px;
+  background: var(--amber);
+  margin: 10px auto 0;
+  border-radius: 2px;
+  transform: rotate(-0.8deg);
+}
+
+.title-sub {
+  font-family: 'Caveat', cursive;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--amber);
+  letter-spacing: 5px;
+  margin-top: 6px;
+}
+
+.specimen-label {
+  font-family: 'Special Elite', monospace;
+  font-size: 11px;
+  color: var(--ink-faded);
+  letter-spacing: 2px;
+  font-style: italic;
+}
+
+.intro-box {
+  max-width: 520px;
+  background: var(--amber-pale);
+  border: 1.5px solid rgba(160,120,60,0.35);
+  padding: 16px 20px;
+  font-family: 'Patrick Hand', cursive;
+  font-size: 16px;
+  line-height: 1.9;
+  text-align: left;
+  color: var(--ink-soft);
+  position: relative;
+  transform: rotate(-0.5deg);
+  box-shadow: 3px 3px 10px var(--shadow), 2px 2px 0 rgba(0,0,0,0.08);
+  border-radius: 2px;
+}
+
+.intro-box::before {
+  content: attr(data-label);
+  position: absolute;
+  top: -18px; left: 12px;
+  background: var(--tape);
+  backdrop-filter: blur(2px);
+  font-family: 'Patrick Hand', cursive;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--amber);
+  padding: 3px 16px;
+  border-radius: 2px;
+  text-transform: uppercase;
+}
+
+.intro-box .accent { color: var(--green); font-weight: 700; }
+.intro-box .warn   { color: var(--red);   font-weight: 700; }
+
+.kb-hint {
+  font-family: 'Patrick Hand', cursive;
+  font-size: 12px;
+  color: var(--ink-faded);
+  letter-spacing: 1px;
+  display: flex; align-items: center; gap: 8px;
+}
+
+/* ══════════════════════════════════════
+   BOTONES
+══════════════════════════════════════ */
+.btn {
+  font-family: 'Caveat', cursive;
+  font-weight: 700;
+  font-size: 19px;
+  letter-spacing: 1px;
+  border-radius: 4px;
+  padding: 11px 24px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.08s, box-shadow 0.08s, filter 0.15s;
+  position: relative;
+}
+.btn:hover { filter: brightness(1.06); }
+.btn:active { transform: translate(2px, 2px) !important; box-shadow: none !important; }
+
+.btn.approve {
+  background: var(--green);
+  color: #fff;
+  border: 2px solid var(--green-mid);
+  box-shadow: 3px 3px 0 rgba(0,0,0,0.25);
+}
+.btn.reject {
+  background: var(--red);
+  color: #fff;
+  border: 2px solid var(--red-light);
+  box-shadow: 3px 3px 0 rgba(0,0,0,0.25);
+}
+
+/* ══════════════════════════════════════
+   INFO SCREEN
+══════════════════════════════════════ */
+.location-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--badge-green);
+  color: var(--green-pale);
+  font-family: 'Patrick Hand', cursive;
+  font-size: 12px;
+  letter-spacing: 3px;
+  padding: 5px 18px;
+  text-transform: uppercase;
+  border-radius: 20px;
+  margin-bottom: 14px;
+}
+
+#info-title {
+  font-family: 'Permanent Marker', cursive;
+  font-size: clamp(22px, 3.5vw, 36px);
+  color: var(--green);
+  margin-bottom: 14px;
+}
+
+#info-desc {
+  max-width: 600px;
+  background: var(--paper-2);
+  border: 1.5px solid var(--border);
+  border-left: 4px solid var(--green-mid);
+  padding: 16px 20px;
+  font-family: 'Patrick Hand', cursive;
+  font-size: 16px;
+  line-height: 1.85;
+  color: var(--ink-soft);
+  text-align: left;
+  box-shadow: 3px 3px 0 var(--shadow);
+  border-radius: 2px;
+}
+
+/* ══════════════════════════════════════
+   PROGRESS DOTS
+══════════════════════════════════════ */
+.progress-dots { display: flex; gap: 8px; align-items: center; }
+.progress-dot {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--paper-3);
+  border: 2px solid var(--border-strong);
+  transition: all 0.35s cubic-bezier(0.34,1.56,0.64,1);
+}
+.progress-dot.done {
+  background: var(--green-light);
+  border-color: var(--green);
+}
+.progress-dot.current {
+  background: var(--amber-light);
+  border-color: var(--amber);
+  animation: dotPulse 1.4s ease-in-out infinite;
+}
+@keyframes dotPulse {
+  0%,100% { transform: scale(1); }
+  50%      { transform: scale(1.45); }
+}
+
+/* ══════════════════════════════════════
+   MAIN GAME
+   FIX PRINCIPAL: flex: 1 para que tome
+   todo el espacio disponible del contenedor.
+   El grid interno se basa en esta altura real.
+══════════════════════════════════════ */
+#main-game {
+  display: none;
+  /* FIX: ocupa TODO el espacio del contenedor */
+  flex: 1;
+  width: 100%;
+  /* FIX: grid con alturas fijas para HUD y desk, stage toma el resto */
+  grid-template-rows: 58px 1fr 175px;
+  position: relative;
+  z-index: 10;
+  /* cuando JS lo activa pasa a grid */
+  min-height: 0;
+}
+
+/* JS activa display:grid — mantenemos la instrucción aquí
+   para que el elemento tenga flex:1 en modo flex del padre */
+#main-game[style*="grid"] {
+  display: grid !important;
+  flex: 1;
+}
+
+/* ══════════════════════════════════════
+   HUD
+══════════════════════════════════════ */
+#ui-header {
+  background: var(--hud-bg);
+  border-bottom: 2px solid var(--green-mid);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 18px 0 68px;
+  position: relative;
+  z-index: 20;
+  transition: background 0.4s;
+  /* FIX: altura fija garantizada */
+  height: 58px;
+  flex-shrink: 0;
+}
+
+.stat-block {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: 'Patrick Hand', cursive;
+  font-size: 13px;
+  letter-spacing: 1px;
+  color: var(--hud-text);
+}
+.stat-value {
+  font-family: 'Caveat', cursive;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--amber-light);
+  min-width: 48px;
+  line-height: 1;
+}
+
+#round-label {
+  font-family: 'Patrick Hand', cursive;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: rgba(160,210,120,0.7);
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.health-bar-container {
+  display: flex; align-items: center; gap: 8px;
+  font-family: 'Patrick Hand', cursive;
+  font-size: 11px; letter-spacing: 1px;
+  color: var(--hud-text);
+}
+.health-bar {
+  width: 130px; height: 14px;
+  background: rgba(0,0,0,0.3);
+  border: 1.5px solid rgba(160,210,120,0.3);
+  border-radius: 20px; overflow: hidden;
+}
+#health-fill {
+  height: 100%; width: 100%;
+  background: linear-gradient(90deg, var(--green), var(--green-light));
+  border-radius: 20px;
+  transition: width 0.5s ease;
+}
+
+/* ══════════════════════════════════════
+   STAGE
+   FIX: min-height: 0 es clave para que
+   1fr funcione correctamente en subgrids
+══════════════════════════════════════ */
+#stage {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 310px;
+  align-items: center;
+  background: var(--paper);
+  overflow: hidden;
+  transition: background 0.4s;
+  /* FIX: sin esto, 1fr no respeta el límite del padre */
+  min-height: 0;
+  height: 100%;
+}
+
+#stage::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: repeating-linear-gradient(
+    180deg, transparent 0px, transparent 31px,
+    var(--paper-line) 31px, var(--paper-line) 32px
+  );
+  pointer-events: none; z-index: 0;
+}
+
+.stage-watermark {
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  width: 280px; height: 280px;
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── VISITOR ── */
+#visitor-area {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  /* FIX: evita que desborde el stage */
+  min-height: 0;
+  overflow: hidden;
+}
+
+#visitor-container {
+  position: relative;
+  width: 240px; height: 240px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* FIX: escala adaptativa en pantallas pequeñas o zoom alto */
+  flex-shrink: 0;
+}
+
+.specimen-ring {
+  position: absolute;
+  width: 188px; height: 188px;
+  border-radius: 50%;
+  border: 2px dashed var(--border-strong);
+  opacity: 0.45;
+}
+.specimen-ring::before {
+  content: 'espécimen';
+  position: absolute;
+  top: -11px; left: 50%;
+  transform: translateX(-50%);
+  background: var(--paper);
+  font-family: 'Caveat', cursive;
+  font-size: 11px;
+  color: var(--ink-faded);
+  padding: 0 6px;
+  white-space: nowrap;
+  transition: background 0.4s;
+}
+
+.scan-line {
+  position: absolute;
+  width: 188px; height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(58,107,37,0.4), transparent);
+  animation: scan 3s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 3;
+  top: 26px; left: 50%; transform: translateX(-50%);
+}
+@keyframes scan {
+  0%   { top: 26px; opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { top: 215px; opacity: 0; }
+}
+
+#visitor-icon {
+  font-size: 96px;
+  line-height: 1;
+  position: relative; z-index: 2;
+  filter: drop-shadow(0 3px 8px rgba(0,0,0,0.15));
+}
+
+#visitor-icon.icon-energy   { color: var(--amber-light); }
+#visitor-icon.icon-water    { color: #3090C0; }
+#visitor-icon.icon-gas      { color: #708050; }
+#visitor-icon.icon-danger   { color: var(--red-light); animation: floatVisitor 3s ease-in-out infinite, wiggleDanger 1.2s ease-in-out infinite; }
+#visitor-icon.icon-molecule { color: #7A48A8; }
+#visitor-icon.icon-enzyme   { color: var(--green); }
+#visitor-icon.icon-other    { color: var(--green-mid); }
+
+@keyframes floatVisitor {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+@keyframes wiggleDanger {
+  0%,100% { transform: rotate(0deg); }
+  25%      { transform: rotate(-3deg); }
+  75%      { transform: rotate(3deg); }
+}
+
+/* ══════════════════════════════════════
+   PASAPORTE — ficha de campo
+══════════════════════════════════════ */
+#card-area {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 18px 16px 0;
+  z-index: 2;
+  /* FIX: no desborda su celda */
+  min-height: 0;
+  overflow: hidden;
+}
+
+#id-card {
+  width: 280px;
+  background: var(--paper-2);
+  color: var(--ink);
+  border: 1.5px solid var(--border-strong);
+  border-radius: 6px;
+  box-shadow: 4px 5px 0 rgba(0,0,0,0.2), 6px 7px 20px var(--shadow);
+  overflow: hidden;
+  transform: rotate(1deg);
+  transition: background 0.4s;
+  position: relative;
+}
+
+#id-card::after {
+  content: '';
+  position: absolute;
+  top: -6px; right: 28px;
+  width: 44px; height: 14px;
+  background: var(--tape);
+  border-radius: 2px;
+  transform: rotate(-1deg);
+}
+
+.card-header {
+  background: var(--green);
+  color: #fff;
+  padding: 9px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.card-header h3 {
+  font-family: 'Caveat', cursive;
+  font-size: 15px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.95);
+  margin: 0;
+  letter-spacing: 1px;
+}
+.card-icon { font-size: 15px; color: var(--amber-light); }
+.card-seal {
+  width: 28px; height: 28px;
+  background: var(--amber);
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.4);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; color: #fff;
+  margin-left: auto; flex-shrink: 0;
+}
+
+.card-body { padding: 10px 12px 8px; }
+
+.doc-field {
+  margin: 5px 0;
+  padding-bottom: 4px;
+  border-bottom: 1px dashed var(--border);
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+}
+.doc-field:last-child { border-bottom: none; }
+
+.field-icon {
+  color: var(--ink-faded); width: 12px;
+  text-align: center; flex-shrink: 0;
+  margin-top: 2px; font-size: 10px;
+}
+.field-label {
+  font-family: 'Special Elite', monospace;
+  font-size: 8.5px; letter-spacing: 1.5px;
+  color: var(--ink-faded); display: block;
+  text-transform: uppercase;
+}
+.field-value {
+  font-family: 'Caveat', cursive;
+  font-size: 14px; font-weight: 600;
+  color: var(--ink-blue);
+  display: block; line-height: 1.25;
+  transition: color 0.3s;
+}
+
+.card-footer {
+  background: var(--paper-3);
+  border-top: 1px dashed var(--border);
+  padding: 5px 12px;
+  font-family: 'Patrick Hand', cursive;
+  font-size: 9px; letter-spacing: 1px;
+  color: var(--ink-faded);
+  display: flex; justify-content: space-between;
+  text-transform: uppercase;
+  transition: background 0.4s;
+}
+
+/* ══════════════════════════════════════
+   STICKY NOTE
+══════════════════════════════════════ */
+#sticky-note {
+  position: absolute;
+  bottom: 14px;
+  left: 60px;
+  width: 210px;
+  background: #FEF68A;
+  color: #3A2A10;
+  padding: 13px 13px 12px;
+  transform: rotate(-2.5deg);
+  border: 1px solid rgba(180,150,0,0.3);
+  display: none;
+  box-shadow: 3px 4px 0 rgba(0,0,0,0.12), 2px 2px 12px rgba(0,0,0,0.1);
+  z-index: 20;
+  border-radius: 2px;
+}
+[data-theme="dark"] #sticky-note {
+  background: #2A2808;
+  color: #C8D080;
+  border-color: rgba(100,100,0,0.4);
+}
+#sticky-note::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: rgba(180,150,0,0.35);
+  border-radius: 2px 2px 0 0;
+}
+.note-title {
+  font-family: 'Caveat', cursive;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--green);
+  margin-bottom: 5px;
+  display: flex; align-items: center; gap: 5px;
+}
+[data-theme="dark"] .note-title { color: #90C050; }
+#pista-text {
+  font-family: 'Indie Flower', cursive;
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ══════════════════════════════════════
+   STAMP
+══════════════════════════════════════ */
+#stamp-visual {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Permanent Marker', cursive;
+  font-size: 38px;
+  letter-spacing: 2px;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 200;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border: 4px solid currentColor;
+  border-radius: 6px;
+  background: rgba(255,252,235,0.9);
+  backdrop-filter: blur(1px);
+}
+[data-theme="dark"] #stamp-visual {
+  background: rgba(15,22,12,0.92);
+}
+
+/* ══════════════════════════════════════
+   DESK
+   FIX: altura fija para que el grid del
+   main-game tenga referencia exacta
+══════════════════════════════════════ */
+#desk {
+  background: linear-gradient(180deg, #3A2810 0%, #2A1C08 100%);
+  border-top: 3px solid var(--amber);
+  display: grid;
+  grid-template-columns: 1fr 240px;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.4s;
+  /* FIX: altura fija evita que crezca o se encoja */
+  height: 175px;
+  flex-shrink: 0;
+}
+[data-theme="dark"] #desk {
+  background: linear-gradient(180deg, #0C1008 0%, #060A04 100%);
+}
+
+#desk::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(
+    86deg, transparent, transparent 18px,
+    rgba(255,255,255,0.012) 18px, rgba(255,255,255,0.012) 19px
+  );
+  pointer-events: none;
+}
+
+/* ── Dialogue box ── */
+#dialogue-box {
+  background: var(--paper);
+  color: var(--ink);
+  padding: 12px 15px;
+  margin: 12px 10px 12px 66px;
+  border: 1.5px solid var(--border);
+  border-top: 3px solid var(--green-mid);
+  border-radius: 4px;
+  box-shadow: 3px 3px 0 rgba(0,0,0,0.2);
+  position: relative;
+  transition: background 0.4s;
+  /* FIX: no desborda el desk */
+  overflow: hidden;
+}
+
+#dialogue-box::before {
+  content: '';
+  position: absolute;
+  bottom: -1px; right: -1px;
+  width: 14px; height: 14px;
+  background: var(--paper-3);
+  border-top: 1.5px solid var(--border);
+  border-left: 1.5px solid var(--border);
+  clip-path: polygon(100% 0, 0 100%, 100% 100%);
+}
+
+.prof-name {
+  font-family: 'Caveat', cursive;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--green);
+  display: flex; align-items: center; gap: 6px;
+  margin-bottom: 5px;
+  border-bottom: 1px dashed var(--border);
+  padding-bottom: 5px;
+}
+
+#prof-talk {
+  font-family: 'Indie Flower', cursive;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  min-height: 40px;
+  font-style: italic;
+  /* FIX: evita que texto largo rompa el layout */
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+.typing::after {
+  content: '|';
+  animation: blink 0.7s step-end infinite;
+  color: var(--green);
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+/* ── Controls ── */
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+  padding: 12px 14px;
+  border-left: 1px solid rgba(255,255,255,0.06);
+  background: rgba(0,0,0,0.15);
+}
+.stamp-btn {
+  width: 100%;
+  justify-content: center;
+  font-size: 18px;
+  padding: 11px 14px;
+  letter-spacing: 1px;
+}
+
+.key-hint {
+  font-family: 'Patrick Hand', cursive;
+  font-size: 10px;
+  color: rgba(255,255,255,0.2);
+  letter-spacing: 0.5px;
+}
+kbd {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 2px;
+  padding: 1px 4px;
+  font-size: 9px;
+  font-family: monospace;
+}
+
+/* ══════════════════════════════════════
+   SCORE POP
+══════════════════════════════════════ */
+.score-pop {
+  position: absolute;
+  font-family: 'Permanent Marker', cursive;
+  font-size: 28px;
+  pointer-events: none;
+  z-index: 300;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.2);
+}
+
+/* ══════════════════════════════════════
+   END SCREEN
+══════════════════════════════════════ */
+#screen-end {
+  gap: 10px;
+  padding: 30px 60px 30px 80px;
+}
+
+.end-badge {
+  font-size: 85px;
+  filter: drop-shadow(0 4px 14px rgba(0,0,0,0.12));
+}
+
+#end-title {
+  font-family: 'Permanent Marker', cursive;
+  font-size: clamp(28px, 4vw, 46px);
+  color: var(--green);
+  text-shadow: 3px 3px 0 var(--paper-3);
+}
+
+.final-score-box {
+  background: var(--paper-2);
+  border: 1.5px solid var(--border-strong);
+  border-top: 3px solid var(--amber);
+  padding: 14px 28px;
+  box-shadow: 3px 3px 0 rgba(0,0,0,0.15);
+  font-family: 'Kalam', cursive;
+  border-radius: 4px;
+  transition: background 0.4s;
+}
+
+.credits-box {
+  font-family: 'Special Elite', monospace;
+  font-size: 11px;
+  color: var(--ink-faded);
+  background: var(--paper-2);
+  border: 1.5px dashed var(--border);
+  padding: 12px 20px;
+  line-height: 1.9;
+  text-align: left;
+  max-width: 400px;
+  border-radius: 4px;
+  transition: background 0.4s;
+}
+
+/* ══════════════════════════════════════
+   RESPONSIVE — LAPTOP ZOOM ALTO (125–200%)
+   FIX: cuando el viewport efectivo se achica
+   (igual que en móvil), adaptamos el layout
+══════════════════════════════════════ */
+
+/* Zoom ~150% en laptop equivale aprox a viewport 860px */
+@media (max-height: 680px) and (min-width: 769px) {
+  #main-game {
+    grid-template-rows: 48px 1fr 140px;
+  }
+  #ui-header {
+    height: 48px;
+  }
+  #desk {
+    height: 140px;
+  }
+  #dialogue-box {
+    margin: 8px 8px 8px 58px;
+    padding: 8px 12px;
+  }
+  #prof-talk {
+    font-size: 13px;
+    -webkit-line-clamp: 2;
+  }
+  .stamp-btn {
+    font-size: 15px;
+    padding: 8px 10px;
+  }
+  #visitor-icon { font-size: 76px; }
+  #visitor-container { width: 200px; height: 200px; }
+  .specimen-ring { width: 155px; height: 155px; }
+  #id-card { width: 250px; }
+}
+
+/* Zoom ~200% en laptop equivale aprox a viewport 500-560px alto */
+@media (max-height: 520px) and (min-width: 769px) {
+  body { padding: 4px; }
+  #game-container {
+    height: calc(100dvh - 8px);
+    max-height: calc(100dvh - 8px);
+  }
+  #main-game {
+    grid-template-rows: 42px 1fr 120px;
+  }
+  #ui-header {
+    height: 42px;
+    padding: 0 12px 0 58px;
+  }
+  .stat-value { font-size: 22px; }
+  #desk {
+    height: 120px;
+  }
+  #dialogue-box {
+    margin: 6px 6px 6px 52px;
+    padding: 6px 10px;
+  }
+  .prof-name { font-size: 13px; margin-bottom: 3px; padding-bottom: 3px; }
+  #prof-talk { font-size: 12px; min-height: 28px; -webkit-line-clamp: 2; }
+  .stamp-btn { font-size: 14px; padding: 7px 8px; }
+  .key-hint { display: none; }
+  #visitor-icon { font-size: 60px; }
+  #visitor-container { width: 160px; height: 160px; }
+  .specimen-ring { width: 128px; height: 128px; }
+  #id-card { width: 230px; }
+  .card-body { padding: 6px 10px 5px; }
+  .doc-field { margin: 3px 0; padding-bottom: 3px; }
+  .field-value { font-size: 12px; }
+  .health-bar { width: 90px; }
+}
+
+/* ══════════════════════════════════════
+   RESPONSIVE — MÓVIL
+══════════════════════════════════════ */
+@media (max-width: 768px) {
+  body {
+    padding: 0;
+    align-items: flex-start;
+    height: 100dvh;
+    min-height: 100dvh;
+    overflow: hidden;
+    /* Contiene el shake de GSAP que anima #game-container */
+    isolation: isolate;
+  }
+
+  /* ── Ocultar espiral y margen izquierdo completamente ── */
+  .spiral-holes       { display: none; }
+  #game-container::before { display: none; }
+
+  #game-container {
+    width: 100%;
+    height: 100dvh;
+    max-height: 100dvh;
+    border-radius: 0;
+    box-shadow: none;
+    /* Evita que el shake de error desborde el viewport */
+    overflow: hidden;
+  }
+
+  /* ── Screens: padding uniforme sin offset izquierdo ── */
+  .screen {
+    padding: 20px 18px;
+    justify-content: center;
+    align-items: center;
+  }
+  #screen-start  { gap: 8px; }
+  #screen-end    { padding: 20px 18px; gap: 8px; }
+
+  .title-main { font-size: clamp(36px, 10vw, 58px); }
+
+  /* ── Ocultar decoraciones de hoja en inicio móvil ── */
+  .leaf-deco { display: none; }
+
+  /* ── Botón de tema: visible SOLO en pantalla inicio ──
+     Se oculta durante el juego y fin via clase que JS añade */
+  #theme-toggle {
+    bottom: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+  }
+  /* Clase que JS debe añadir a body cuando el juego está activo */
+  body.game-running #theme-toggle { display: none; }
+
+  /* ── HUD: centrado, sin padding izquierdo de espiral ── */
+  #main-game {
+    /* HUD 52px + stage 1fr + desk (dialogue+botones) 155px */
+    grid-template-rows: 52px 1fr 155px;
+  }
+
+  #ui-header {
+    height: 52px;
+    padding: 0 14px;
+    justify-content: space-around;
+    gap: 8px;
+  }
+
+  /* Ocultar label de ronda en HUD — ocupa espacio innecesario */
+  #round-label { display: none; }
+
+  /* Barra de health más corta para que quepan los 3 bloques */
+  .health-bar { width: 80px; }
+  .stat-value { font-size: 24px; min-width: 38px; }
+
+  /* ── Stage: columna, visitante arriba, ficha abajo ── */
+  #stage {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    overflow-y: auto;
+    align-items: start;
+  }
+
+  /* ── Visitante compacto y centrado ── */
+  #visitor-area {
+    height: 160px;
+    min-height: 0;
+    padding-top: 10px;
+  }
+  #visitor-container { width: 150px; height: 150px; }
+  #visitor-icon      { font-size: 64px; }
+  .specimen-ring     { width: 118px; height: 118px; }
+
+  /* ── Ficha de campo: centrada, sin rotación, compacta ── */
+  #card-area {
+    height: auto;
+    padding: 0 16px 10px;
+    justify-content: center;
+  }
+
+  #id-card {
+    width: 100%;
+    max-width: 320px;
+    transform: rotate(0deg);   /* sin inclinación */
+  }
+
+  /* Reducir padding interno de la ficha */
+  .card-body { padding: 7px 10px 5px; }
+  .doc-field { margin: 3px 0; padding-bottom: 3px; }
+  .field-label { font-size: 7.5px; }
+  .field-value { font-size: 13px; }
+  .card-header { padding: 7px 10px; }
+  .card-header h3 { font-size: 13px; }
+  .card-footer { font-size: 8px; padding: 4px 10px; }
+
+  /* Ocultar sticky note ── no hay espacio */
+  #sticky-note { display: none !important; }
+
+  /* ── Desk: dialogue arriba + safe bar botones abajo ── */
+  #desk {
+    height: 155px;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 68px;
+    border-top: 2px solid var(--amber);
+    background: linear-gradient(180deg, #3A2810 0%, #2A1C08 100%);
+  }
+  [data-theme="dark"] #desk {
+    background: linear-gradient(180deg, #0C1008 0%, #060A04 100%);
+  }
+
+  /* Dialogue del profesor: visible y compacto */
+  #dialogue-box {
+    display: block;
+    margin: 8px 12px 4px 12px;
+    padding: 7px 11px;
+    border-top-width: 2px;
+  }
+  .prof-name      { font-size: 13px; margin-bottom: 3px; padding-bottom: 3px; }
+  #prof-talk      { font-size: 13px; min-height: 28px; -webkit-line-clamp: 2; }
+
+  /* Controls = safe bar con botones grandes */
+  .controls {
+    flex-direction: row;
+    padding: 10px 20px;
+    padding-bottom: max(10px, env(safe-area-inset-bottom));
+    gap: 16px;
+    border-left: none;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    background: rgba(0,0,0,0.2);
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+
+  .stamp-btn {
+    flex: 1;
+    max-width: 160px;
+    font-size: 18px;
+    padding: 12px 10px;
+    justify-content: center;
+    letter-spacing: 0.5px;
+    border-radius: 8px;
+  }
+
+  .key-hint { display: none; }
+
+  /* ── Pantalla info: centrada sin offset ── */
+  #screen-info { padding: 24px 20px; }
+  #info-desc   { font-size: 14px; line-height: 1.75; }
+  #info-title  { font-size: clamp(20px, 5vw, 30px); }
+}
+
+/* ── Teléfonos pequeños (≤ 390px ancho) ── */
+@media (max-width: 390px) {
+  .title-main  { font-size: 32px; }
+  .title-sub   { font-size: 15px; letter-spacing: 2px; }
+  .intro-box   { font-size: 13px; line-height: 1.7; padding: 12px 14px; }
+  #visitor-icon       { font-size: 54px; }
+  #visitor-container  { width: 130px; height: 130px; }
+  .specimen-ring      { width: 102px; height: 102px; }
+  #id-card            { max-width: 290px; }
+  .field-value        { font-size: 12px; }
+  .stamp-btn          { font-size: 16px; padding: 13px 8px; }
+  .stat-value         { font-size: 20px; }
+  .health-bar         { width: 65px; }
+}
+
+/* ── Landscape en móvil ── */
+@media (max-width: 768px) and (max-height: 500px) and (orientation: landscape) {
+  #main-game {
+    grid-template-rows: 44px 1fr 120px;
+  }
+  #ui-header      { height: 44px; }
+  #visitor-area   { height: 120px; padding-top: 4px; }
+  #visitor-container { width: 110px; height: 110px; }
+  #visitor-icon   { font-size: 48px; }
+  .specimen-ring  { width: 88px; height: 88px; }
+  #stage {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+    overflow: hidden;
+  }
+  #card-area      { padding: 6px 10px; }
+  #id-card        { max-width: 240px; }
+  .card-body      { padding: 4px 8px; }
+  .doc-field      { margin: 2px 0; }
+  #desk {
+    height: 120px;
+    grid-template-rows: 1fr 52px;
+  }
+  #dialogue-box   { margin: 5px 8px 2px 8px; padding: 5px 9px; }
+  #prof-talk      { font-size: 11px; -webkit-line-clamp: 1; }
+  .prof-name      { font-size: 11px; margin-bottom: 2px; }
+  .controls       { padding: 6px 16px; gap: 12px; }
+  .stamp-btn      { font-size: 15px; padding: 8px 8px; }
+}

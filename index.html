@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guardia de la Hoja — Intro</title>
+<link rel="stylesheet" href="intro.css">
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     SKIP BUTTON
+══════════════════════════════════════ -->
+<button id="skip-btn" onclick="skipIntro()">
+  Saltar intro <span class="skip-key">␣</span>
+</button>
+
+<!-- ══════════════════════════════════════
+     PROGRESS BAR
+══════════════════════════════════════ -->
+<div id="progress-bar"><div id="progress-fill"></div></div>
+
+<!-- ══════════════════════════════════════
+     SCENE CONTAINER
+══════════════════════════════════════ -->
+<div id="scene-wrap">
+
+  <!-- ────────────────────────────
+       SCENE 0 — EXTERIOR
+       Cielo + hoja de maíz, fotón viajando
+  ──────────────────────────────── -->
+  <div id="scene-0" class="scene active">
+
+    <!-- Sky gradient -->
+    <div class="sky"></div>
+
+    <!-- Sun -->
+    <div class="sun">
+      <div class="sun-core"></div>
+      <div class="sun-ray r0"></div>
+      <div class="sun-ray r1"></div>
+      <div class="sun-ray r2"></div>
+      <div class="sun-ray r3"></div>
+      <div class="sun-ray r4"></div>
+      <div class="sun-ray r5"></div>
+      <div class="sun-ray r6"></div>
+      <div class="sun-ray r7"></div>
+    </div>
+
+    <!-- Photon beam -->
+    <div id="photon-beam">
+      <div class="photon" id="ph1"></div>
+      <div class="photon" id="ph2"></div>
+      <div class="photon" id="ph3"></div>
+    </div>
+
+    <!-- Corn leaf SVG -->
+    <svg id="corn-leaf" viewBox="0 0 320 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Main leaf body -->
+      <path id="leaf-body" d="M160 410 C120 350 80 280 90 200 C100 120 130 80 160 40 C190 80 220 120 230 200 C240 280 200 350 160 410Z"
+            fill="url(#leafGrad)" stroke="#2A6818" stroke-width="2"/>
+      <!-- Midrib -->
+      <path d="M160 410 C158 350 156 280 158 200 C160 120 161 80 160 40"
+            stroke="#1A5008" stroke-width="3" stroke-linecap="round"/>
+      <!-- Lateral veins left -->
+      <path d="M156 340 C130 325 105 315 90 310" stroke="#2A6818" stroke-width="1.2" fill="none" opacity="0.7"/>
+      <path d="M156 290 C128 272 100 260 85 255" stroke="#2A6818" stroke-width="1.2" fill="none" opacity="0.7"/>
+      <path d="M157 240 C130 220 104 207 90 200" stroke="#2A6818" stroke-width="1.2" fill="none" opacity="0.7"/>
+      <path d="M158 190 C133 170 108 157 95 150" stroke="#2A6818" stroke-width="1.2" fill="none" opacity="0.7"/>
+      <path d="M159 140 C138 120 116 110 105 106" stroke="#2A6818" stroke-width="1.2" fill="none" opacity="0.7"/>
+      <!-- Lateral veins right -->
+      <path d="M164 340 C190 325 215 315 230 310" stroke="#2A6818" stroke-width="1.2" fill="none" opacity="0.7"/>
+      <path d="M164 290 C192 272 220 260 235 255" stroke="#2A6818" stroke-width="1.2" fill="none" opacity="0.7"/>
+      <path d="M163 240 C190 220 216 207 230 200" stroke="#2A6818" stroke-width="1.2" fill="none" opacity="0.7"/>
+      <path d="M162 190 C187 170 212 157 225 150" stroke="#2A6818" stroke-width="1.2" fill="none" opacity="0.7"/>
+      <path d="M161 140 C182 120 204 110 215 106" stroke="#2A6818" stroke-width="1.2" fill="none" opacity="0.7"/>
+      <!-- Stomata dots -->
+      <ellipse cx="125" cy="300" rx="3" ry="2" fill="#1A5008" opacity="0.5"/>
+      <ellipse cx="195" cy="270" rx="3" ry="2" fill="#1A5008" opacity="0.5"/>
+      <ellipse cx="115" cy="220" rx="3" ry="2" fill="#1A5008" opacity="0.5"/>
+      <ellipse cx="200" cy="190" rx="3" ry="2" fill="#1A5008" opacity="0.5"/>
+      <defs>
+        <linearGradient id="leafGrad" x1="90" y1="0" x2="230" y2="0" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#3A8C20"/>
+          <stop offset="50%" stop-color="#5AB030"/>
+          <stop offset="100%" stop-color="#3A8C20"/>
+        </linearGradient>
+      </defs>
+    </svg>
+
+    <!-- Photon impact flash on leaf -->
+    <div id="leaf-flash"></div>
+
+    <!-- Caption text -->
+    <div class="caption" id="cap-0">
+      <p class="cap-eyebrow">Zea mays · Campo de Maíz</p>
+      <p class="cap-main">Un fotón del Sol viaja 150 millones de kilómetros…</p>
+    </div>
+
+  </div><!-- /scene-0 -->
+
+  <!-- ────────────────────────────
+       SCENE 1 — ZOOM A LA HOJA
+       Células visibles, cloroplastos
+  ──────────────────────────────── -->
+  <div id="scene-1" class="scene">
+
+    <div class="bg-cells"></div>
+
+    <!-- Cell grid background -->
+    <svg id="cell-view" viewBox="0 0 800 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Mesofilo cells -->
+      <g id="cells-group">
+        <!-- Row 1 -->
+        <ellipse cx="120" cy="120" rx="95" ry="75" fill="#4AAE28" fill-opacity="0.25" stroke="#3A8C18" stroke-width="1.5"/>
+        <ellipse cx="310" cy="110" rx="100" ry="78" fill="#4AAE28" fill-opacity="0.25" stroke="#3A8C18" stroke-width="1.5"/>
+        <ellipse cx="500" cy="125" rx="92" ry="72" fill="#4AAE28" fill-opacity="0.25" stroke="#3A8C18" stroke-width="1.5"/>
+        <ellipse cx="690" cy="115" rx="95" ry="74" fill="#4AAE28" fill-opacity="0.25" stroke="#3A8C18" stroke-width="1.5"/>
+        <!-- Row 2 -->
+        <ellipse cx="210" cy="265" rx="98" ry="76" fill="#4AAE28" fill-opacity="0.25" stroke="#3A8C18" stroke-width="1.5"/>
+        <ellipse cx="400" cy="270" rx="100" ry="78" fill="#4AAE28" fill-opacity="0.25" stroke="#3A8C18" stroke-width="1.5"/>
+        <ellipse cx="590" cy="260" rx="95" ry="75" fill="#4AAE28" fill-opacity="0.25" stroke="#3A8C18" stroke-width="1.5"/>
+        <!-- Row 3 -->
+        <ellipse cx="120" cy="410" rx="90" ry="70" fill="#4AAE28" fill-opacity="0.25" stroke="#3A8C18" stroke-width="1.5"/>
+        <ellipse cx="310" cy="420" rx="100" ry="72" fill="#4AAE28" fill-opacity="0.25" stroke="#3A8C18" stroke-width="1.5"/>
+        <ellipse cx="500" cy="405" rx="94" ry="73" fill="#4AAE28" fill-opacity="0.25" stroke="#3A8C18" stroke-width="1.5"/>
+        <ellipse cx="690" cy="415" rx="92" ry="71" fill="#4AAE28" fill-opacity="0.25" stroke="#3A8C18" stroke-width="1.5"/>
+      </g>
+      <!-- Chloroplasts inside cells — small oval organelles -->
+      <g id="chloroplasts-group" opacity="0">
+        <!-- In cell 310,110 -->
+        <ellipse cx="285" cy="95" rx="22" ry="13" fill="#2D7A10" fill-opacity="0.85" stroke="#1A5008" stroke-width="1"/>
+        <ellipse cx="320" cy="115" rx="20" ry="12" fill="#2D7A10" fill-opacity="0.85" stroke="#1A5008" stroke-width="1"/>
+        <ellipse cx="300" cy="130" rx="21" ry="12" fill="#2D7A10" fill-opacity="0.85" stroke="#1A5008" stroke-width="1"/>
+        <!-- In cell 400,270 -->
+        <ellipse cx="375" cy="255" rx="22" ry="13" fill="#2D7A10" fill-opacity="0.85" stroke="#1A5008" stroke-width="1"/>
+        <ellipse cx="415" cy="275" rx="20" ry="12" fill="#2D7A10" fill-opacity="0.85" stroke="#1A5008" stroke-width="1"/>
+        <ellipse cx="395" cy="290" rx="21" ry="12" fill="#2D7A10" fill-opacity="0.85" stroke="#1A5008" stroke-width="1"/>
+        <!-- In cell 500,125 -->
+        <ellipse cx="476" cy="110" rx="21" ry="12" fill="#2D7A10" fill-opacity="0.85" stroke="#1A5008" stroke-width="1"/>
+        <ellipse cx="510" cy="128" rx="20" ry="11" fill="#2D7A10" fill-opacity="0.85" stroke="#1A5008" stroke-width="1"/>
+        <ellipse cx="490" cy="142" rx="22" ry="13" fill="#2D7A10" fill-opacity="0.85" stroke="#1A5008" stroke-width="1"/>
+      </g>
+    </svg>
+
+    <!-- Zoom pulse ring -->
+    <div id="zoom-ring"></div>
+
+    <div class="caption" id="cap-1">
+      <p class="cap-eyebrow">Dentro de la hoja</p>
+      <p class="cap-main">Las células del mesófilo están llenas de <span class="hi">cloroplastos</span></p>
+    </div>
+
+  </div><!-- /scene-1 -->
+
+  <!-- ────────────────────────────
+       SCENE 2 — INTERIOR CLOROPLASTO
+       Tilacoides en detalle, fotosistemas
+  ──────────────────────────────── -->
+  <div id="scene-2" class="scene">
+
+    <!-- Chloroplast interior background -->
+    <div class="chloro-bg"></div>
+
+    <!-- Thylakoid stacks (grana) SVG -->
+    <svg id="thylakoid-svg" viewBox="0 0 800 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+      <!-- Stroma label area -->
+      <text x="640" y="60" font-family="'Kalam', cursive" font-size="15" fill="#5AB030" fill-opacity="0.6" letter-spacing="2">ESTROMA</text>
+
+      <!-- Granum 1 — left stack -->
+      <g id="granum-1">
+        <ellipse cx="200" cy="340" rx="72" ry="18" fill="#1A6A08" stroke="#0A4A00" stroke-width="1.5"/>
+        <ellipse cx="200" cy="312" rx="72" ry="18" fill="#228A10" stroke="#0A5A00" stroke-width="1.5"/>
+        <ellipse cx="200" cy="284" rx="72" ry="18" fill="#2AAA18" stroke="#0A6A00" stroke-width="1.5"/>
+        <ellipse cx="200" cy="256" rx="72" ry="18" fill="#34C020" stroke="#0A7A00" stroke-width="1.5"/>
+        <ellipse cx="200" cy="228" rx="72" ry="18" fill="#3AD028" stroke="#0A8A00" stroke-width="1.5"/>
+        <!-- Internal thylakoid membrane lines -->
+        <line x1="130" y1="284" x2="270" y2="284" stroke="#0A5A00" stroke-width="0.8" opacity="0.5"/>
+        <line x1="130" y1="312" x2="270" y2="312" stroke="#0A5A00" stroke-width="0.8" opacity="0.5"/>
+        <!-- Photosystem II protein complex on top disk -->
+        <g id="ps2-1">
+          <rect x="163" y="218" width="24" height="20" rx="4" fill="#C87818" stroke="#8A4808" stroke-width="1.2"/>
+          <text x="175" y="231" text-anchor="middle" font-family="'Patrick Hand', cursive" font-size="9" fill="#FEE8B0">PSII</text>
+        </g>
+        <g id="ps2-2">
+          <rect x="200" y="218" width="24" height="20" rx="4" fill="#C87818" stroke="#8A4808" stroke-width="1.2"/>
+          <text x="212" y="231" text-anchor="middle" font-family="'Patrick Hand', cursive" font-size="9" fill="#FEE8B0">PSI</text>
+        </g>
+      </g>
+
+      <!-- Granum 2 — center stack -->
+      <g id="granum-2">
+        <ellipse cx="400" cy="360" rx="80" ry="20" fill="#1A6A08" stroke="#0A4A00" stroke-width="1.5"/>
+        <ellipse cx="400" cy="328" rx="80" ry="20" fill="#228A10" stroke="#0A5A00" stroke-width="1.5"/>
+        <ellipse cx="400" cy="296" rx="80" ry="20" fill="#2AAA18" stroke="#0A6A00" stroke-width="1.5"/>
+        <ellipse cx="400" cy="264" rx="80" ry="20" fill="#34C020" stroke="#0A7A00" stroke-width="1.5"/>
+        <ellipse cx="400" cy="232" rx="80" ry="20" fill="#3AD028" stroke="#0A8A00" stroke-width="1.5"/>
+        <ellipse cx="400" cy="200" rx="80" ry="20" fill="#48E030" stroke="#0A9A00" stroke-width="1.5"/>
+        <line x1="322" y1="264" x2="478" y2="264" stroke="#0A5A00" stroke-width="0.8" opacity="0.5"/>
+        <line x1="322" y1="296" x2="478" y2="296" stroke="#0A5A00" stroke-width="0.8" opacity="0.5"/>
+        <line x1="322" y1="328" x2="478" y2="328" stroke="#0A5A00" stroke-width="0.8" opacity="0.5"/>
+        <!-- Photosystem complexes -->
+        <g id="ps2-center-1">
+          <rect x="355" y="188" width="28" height="22" rx="5" fill="#C87818" stroke="#8A4808" stroke-width="1.2"/>
+          <text x="369" y="202" text-anchor="middle" font-family="'Patrick Hand', cursive" font-size="9.5" fill="#FEE8B0">PSII</text>
+        </g>
+        <g id="ps2-center-2">
+          <rect x="400" y="188" width="28" height="22" rx="5" fill="#A05820" stroke="#6A3808" stroke-width="1.2"/>
+          <text x="414" y="202" text-anchor="middle" font-family="'Patrick Hand', cursive" font-size="9.5" fill="#FEE8B0">PSI</text>
+        </g>
+      </g>
+
+      <!-- Granum 3 — right stack -->
+      <g id="granum-3">
+        <ellipse cx="610" cy="350" rx="74" ry="18" fill="#1A6A08" stroke="#0A4A00" stroke-width="1.5"/>
+        <ellipse cx="610" cy="322" rx="74" ry="18" fill="#228A10" stroke="#0A5A00" stroke-width="1.5"/>
+        <ellipse cx="610" cy="294" rx="74" ry="18" fill="#2AAA18" stroke="#0A6A00" stroke-width="1.5"/>
+        <ellipse cx="610" cy="266" rx="74" ry="18" fill="#34C020" stroke="#0A7A00" stroke-width="1.5"/>
+        <ellipse cx="610" cy="238" rx="74" ry="18" fill="#3AD028" stroke="#0A8A00" stroke-width="1.5"/>
+        <line x1="538" y1="294" x2="682" y2="294" stroke="#0A5A00" stroke-width="0.8" opacity="0.5"/>
+        <line x1="538" y1="322" x2="682" y2="322" stroke="#0A5A00" stroke-width="0.8" opacity="0.5"/>
+        <g>
+          <rect x="573" y="226" width="28" height="22" rx="5" fill="#C87818" stroke="#8A4808" stroke-width="1.2"/>
+          <text x="587" y="240" text-anchor="middle" font-family="'Patrick Hand', cursive" font-size="9.5" fill="#FEE8B0">PSII</text>
+        </g>
+      </g>
+
+      <!-- Lamellae (stroma lamellae connecting grana) -->
+      <path d="M272 310 C310 295 355 288 322 272" stroke="#1A6A08" stroke-width="3" fill="none" opacity="0.6"/>
+      <path d="M478 290 C515 275 545 270 538 266" stroke="#1A6A08" stroke-width="3" fill="none" opacity="0.6"/>
+
+      <!-- Photon entering — animated separately via CSS -->
+      <circle id="photon-in" cx="-30" cy="180" r="8" fill="#FFE840" opacity="0.9"/>
+      <circle id="photon-in-glow" cx="-30" cy="180" r="16" fill="#FFE840" opacity="0.2"/>
+
+      <!-- ATP and NADPH labels that appear later -->
+      <g id="products-label" opacity="0">
+        <rect x="30" y="60" width="90" height="28" rx="6" fill="#C07828" fill-opacity="0.2" stroke="#C07828" stroke-width="1"/>
+        <text x="75" y="78" text-anchor="middle" font-family="'Caveat', cursive" font-size="15" fill="#C07828" font-weight="600">ATP ⚡</text>
+        <rect x="135" y="60" width="105" height="28" rx="6" fill="#3A6B25" fill-opacity="0.2" stroke="#3A6B25" stroke-width="1"/>
+        <text x="187" y="78" text-anchor="middle" font-family="'Caveat', cursive" font-size="15" fill="#3A6B25" font-weight="600">NADPH 🔋</text>
+      </g>
+
+      <!-- Electron flow arrows -->
+      <g id="electron-flow" opacity="0">
+        <path d="M200 228 C240 210 300 205 370 200" stroke="#FFE840" stroke-width="2" fill="none" stroke-dasharray="6 4">
+          <animate attributeName="stroke-dashoffset" from="0" to="-20" dur="0.8s" repeatCount="indefinite"/>
+        </path>
+      </g>
+
+    </svg>
+
+    <div class="caption" id="cap-2">
+      <p class="cap-eyebrow">Interior del cloroplasto</p>
+      <p class="cap-main">Los <span class="hi">tilacoides</span> son sacos membranosos con <span class="hi2">fotosistemas</span> incrustados</p>
+    </div>
+
+  </div><!-- /scene-2 -->
+
+  <!-- ────────────────────────────
+       SCENE 3 — ZOOM FOTOSISTEMA
+       Close-up PSII con fotón impactando
+  ──────────────────────────────── -->
+  <div id="scene-3" class="scene">
+
+    <div class="membrane-bg"></div>
+
+    <svg id="photosystem-svg" viewBox="0 0 800 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+      <!-- Thylakoid membrane (horizontal band) -->
+      <rect x="0" y="185" width="800" height="110" fill="#1A6A08" fill-opacity="0.35" stroke="none"/>
+      <line x1="0" y1="185" x2="800" y2="185" stroke="#2A8A18" stroke-width="2"/>
+      <line x1="0" y1="295" x2="800" y2="295" stroke="#2A8A18" stroke-width="2"/>
+      <text x="740" y="178" text-anchor="end" font-family="'Patrick Hand', cursive" font-size="13" fill="#5AB030" fill-opacity="0.8">lumen</text>
+      <text x="740" y="320" text-anchor="end" font-family="'Patrick Hand', cursive" font-size="13" fill="#5AB030" fill-opacity="0.8">estroma</text>
+      <text x="750" y="245" text-anchor="end" font-family="'Patrick Hand', cursive" font-size="11" fill="#90D060" fill-opacity="0.7">membrana tilacoide</text>
+
+      <!-- Lipid bilayer dots -->
+      <g opacity="0.4">
+        <circle cx="60" cy="205" r="6" fill="#3AAC20"/>
+        <circle cx="60" cy="275" r="6" fill="#3AAC20"/>
+        <circle cx="120" cy="205" r="6" fill="#3AAC20"/>
+        <circle cx="120" cy="275" r="6" fill="#3AAC20"/>
+        <circle cx="180" cy="205" r="6" fill="#3AAC20"/>
+        <circle cx="180" cy="275" r="6" fill="#3AAC20"/>
+        <circle cx="620" cy="205" r="6" fill="#3AAC20"/>
+        <circle cx="620" cy="275" r="6" fill="#3AAC20"/>
+        <circle cx="680" cy="205" r="6" fill="#3AAC20"/>
+        <circle cx="680" cy="275" r="6" fill="#3AAC20"/>
+        <circle cx="740" cy="205" r="6" fill="#3AAC20"/>
+        <circle cx="740" cy="275" r="6" fill="#3AAC20"/>
+      </g>
+
+      <!-- PHOTOSYSTEM II complex (large protein) -->
+      <g id="psii-complex">
+        <rect x="280" y="165" width="240" height="150" rx="12" fill="#8A4808" fill-opacity="0.15" stroke="#8A4808" stroke-width="1.5"/>
+        <!-- Protein subunits -->
+        <rect x="295" y="180" width="55" height="120" rx="8" fill="#B86820" fill-opacity="0.6" stroke="#8A4808" stroke-width="1"/>
+        <rect x="362" y="175" width="55" height="130" rx="8" fill="#C87828" fill-opacity="0.7" stroke="#8A4808" stroke-width="1"/>
+        <rect x="430" y="180" width="55" height="120" rx="8" fill="#B86820" fill-opacity="0.6" stroke="#8A4808" stroke-width="1"/>
+        <!-- Chlorophyll molecules (green circles in proteins) -->
+        <circle cx="322" cy="218" r="10" fill="#3AD020" fill-opacity="0.9" stroke="#1A8008" stroke-width="1"/>
+        <circle cx="322" cy="248" r="10" fill="#48E030" fill-opacity="0.9" stroke="#1A8008" stroke-width="1"/>
+        <circle cx="389" cy="213" r="10" fill="#3AD020" fill-opacity="0.9" stroke="#1A8008" stroke-width="1"/>
+        <circle cx="389" cy="243" r="10" fill="#48E030" fill-opacity="0.9" stroke="#1A8008" stroke-width="1"/>
+        <circle cx="389" cy="273" r="10" fill="#3AD020" fill-opacity="0.9" stroke="#1A8008" stroke-width="1"/>
+        <circle cx="457" cy="218" r="10" fill="#3AD020" fill-opacity="0.9" stroke="#1A8008" stroke-width="1"/>
+        <circle cx="457" cy="248" r="10" fill="#48E030" fill-opacity="0.9" stroke="#1A8008" stroke-width="1"/>
+        <!-- PSII label -->
+        <text x="400" y="158" text-anchor="middle" font-family="'Caveat', cursive" font-size="18" fill="#E8A030" font-weight="700">Fotosistema II</text>
+        <!-- Reaction center label -->
+        <text x="400" y="340" text-anchor="middle" font-family="'Patrick Hand', cursive" font-size="12" fill="#A07030" fill-opacity="0.9">Centro de reacción P680</text>
+        <line x1="400" y1="330" x2="400" y2="315" stroke="#A07030" stroke-width="1" stroke-dasharray="3 2" opacity="0.7"/>
+        <circle cx="400" cy="313" r="3" fill="#A07030" opacity="0.7"/>
+      </g>
+
+      <!-- Water splitting (OEC) on lumen side -->
+      <g id="oec" opacity="0">
+        <rect x="330" y="130" width="140" height="50" rx="8" fill="#3090C0" fill-opacity="0.2" stroke="#3090C0" stroke-width="1.2"/>
+        <text x="400" y="150" text-anchor="middle" font-family="'Patrick Hand', cursive" font-size="12" fill="#3090C0">2H₂O → O₂ + 4H⁺ + 4e⁻</text>
+        <text x="400" y="168" text-anchor="middle" font-family="'Special Elite', monospace" font-size="10" fill="#3090C0" fill-opacity="0.8">Fotólisis del agua</text>
+        <!-- Arrow up from membrane to OEC -->
+        <line x1="400" y1="183" x2="400" y2="182" stroke="#3090C0" stroke-width="1.5" marker-end="url(#arrBlue)"/>
+        <defs>
+          <marker id="arrBlue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+            <path d="M2 2L8 5L2 8" fill="none" stroke="#3090C0" stroke-width="1.5"/>
+          </marker>
+        </defs>
+      </g>
+
+      <!-- Photon arriving from left -->
+      <g id="photon-arrive">
+        <circle id="ph-main" cx="80" cy="240" r="14" fill="#FFE840" opacity="0.9"/>
+        <circle id="ph-glow1" cx="80" cy="240" r="22" fill="#FFE840" opacity="0.25"/>
+        <circle id="ph-glow2" cx="80" cy="240" r="32" fill="#FFE840" opacity="0.1"/>
+        <text id="ph-text" x="80" y="244" text-anchor="middle" font-family="'Patrick Hand', cursive" font-size="11" fill="#8A6000">680nm</text>
+      </g>
+
+      <!-- Excited electron leaving -->
+      <g id="excited-electron" opacity="0">
+        <circle cx="500" cy="240" r="10" fill="#FFE840" stroke="#C89010" stroke-width="1.5"/>
+        <text x="500" y="244" text-anchor="middle" font-family="'Patrick Hand', cursive" font-size="10" fill="#6A4000">e⁻</text>
+        <!-- Path of electron -->
+        <path d="M490 240 C530 200 560 195 580 210" stroke="#FFE840" stroke-width="1.8" fill="none" stroke-dasharray="5 3" opacity="0.8"/>
+      </g>
+
+      <!-- Energy label -->
+      <g id="energy-label" opacity="0">
+        <text x="400" y="450" text-anchor="middle" font-family="'Caveat', cursive" font-size="20" fill="#FFE840" font-weight="700">⚡ ¡Electrón excitado!</text>
+      </g>
+
+    </svg>
+
+    <div class="caption" id="cap-3">
+      <p class="cap-eyebrow">Fotosistema II · Membrana tilacoide</p>
+      <p class="cap-main">El fotón <span class="hi">excita un electrón</span> en la clorofila — aquí comienza la fotosíntesis</p>
+    </div>
+
+  </div><!-- /scene-3 -->
+
+  <!-- ────────────────────────────
+       SCENE 4 — TRANSICIÓN AL JUEGO
+       Texto final + llamada a acción
+  ──────────────────────────────── -->
+  <div id="scene-4" class="scene">
+
+    <div class="final-bg"></div>
+
+    <!-- Animated particles -->
+    <div id="particles-final"></div>
+
+    <div id="final-content">
+      <div class="notebook-card">
+        <p class="nb-eyebrow">Cuaderno de Campo · Misión C4</p>
+        <h1 class="nb-title">¡Es tu turno,<br>Guardia!</h1>
+        <p class="nb-body">
+          Ahora que sabes cómo funciona la fotosíntesis,
+          debes <strong>proteger los tilacoides</strong>.<br>
+          Aprueba a los agentes legítimos y <strong>rechaza a los impostores</strong>.<br>
+          <em>El maíz C4 depende de ti.</em>
+        </p>
+        <div class="nb-divider"></div>
+        <button class="play-btn" id="play-btn" onclick="goToGame()">
+          <span class="btn-icon">🌽</span>
+          Iniciar el juego
+        </button>
+        <p class="nb-hint">La intro se cierra automáticamente…</p>
+      </div>
+    </div>
+
+  </div><!-- /scene-4 -->
+
+</div><!-- /scene-wrap -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="intro.js"></script>
+</body>
+</html>

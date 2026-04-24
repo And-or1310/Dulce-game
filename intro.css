@@ -1,0 +1,493 @@
+/* ══════════════════════════════════════
+   GUARDIA DE LA HOJA — INTRO CINEMÁTICA
+   intro.css
+══════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Kalam:wght@400;700&family=Patrick+Hand&family=Permanent+Marker&family=Special+Elite&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #000;
+}
+
+body {
+  font-family: 'Kalam', cursive;
+  color: #fff;
+}
+
+/* ══════════════════════════════════════
+   SKIP BUTTON
+══════════════════════════════════════ */
+#skip-btn {
+  position: fixed;
+  top: 18px;
+  right: 20px;
+  z-index: 999;
+  background: rgba(0,0,0,0.4);
+  border: 1.5px solid rgba(255,255,255,0.25);
+  color: rgba(255,255,255,0.65);
+  font-family: 'Patrick Hand', cursive;
+  font-size: 13px;
+  letter-spacing: 1px;
+  padding: 6px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+  backdrop-filter: blur(4px);
+}
+#skip-btn:hover {
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+}
+.skip-key {
+  font-family: monospace;
+  background: rgba(255,255,255,0.15);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 12px;
+}
+
+/* ══════════════════════════════════════
+   PROGRESS BAR
+══════════════════════════════════════ */
+#progress-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: rgba(255,255,255,0.1);
+  z-index: 998;
+}
+#progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3AD028, #E8A030, #FFE840);
+  width: 0%;
+  transition: width 0.5s linear;
+}
+
+/* ══════════════════════════════════════
+   SCENE WRAP
+══════════════════════════════════════ */
+#scene-wrap {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* ══════════════════════════════════════
+   SCENES — base
+══════════════════════════════════════ */
+.scene {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.8s ease;
+  overflow: hidden;
+}
+.scene.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* ══════════════════════════════════════
+   SCENE 0 — EXTERIOR
+══════════════════════════════════════ */
+
+/* Sky */
+.sky {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #0A1A40 0%, #1A3A80 30%, #4080D0 65%, #80C0E0 85%, #C8E8F8 100%);
+}
+
+/* Sun */
+.sun {
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 120px;
+}
+.sun-core {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60px; height: 60px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #FFF8A0 30%, #FFE040 60%, #FFB820 100%);
+  box-shadow: 0 0 40px 20px rgba(255,220,0,0.5);
+  animation: sunPulse 3s ease-in-out infinite;
+}
+@keyframes sunPulse {
+  0%,100% { box-shadow: 0 0 40px 20px rgba(255,220,0,0.5); }
+  50%      { box-shadow: 0 0 60px 30px rgba(255,220,0,0.7); }
+}
+
+/* Sun rays */
+.sun-ray {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 3px; height: 36px;
+  background: linear-gradient(180deg, #FFE040, transparent);
+  border-radius: 2px;
+  transform-origin: top center;
+  opacity: 0.7;
+  animation: rayRotate 8s linear infinite;
+}
+.r0  { transform: translateX(-50%) rotate(0deg)   translateY(35px); }
+.r1  { transform: translateX(-50%) rotate(45deg)  translateY(35px); }
+.r2  { transform: translateX(-50%) rotate(90deg)  translateY(35px); }
+.r3  { transform: translateX(-50%) rotate(135deg) translateY(35px); }
+.r4  { transform: translateX(-50%) rotate(180deg) translateY(35px); }
+.r5  { transform: translateX(-50%) rotate(225deg) translateY(35px); }
+.r6  { transform: translateX(-50%) rotate(270deg) translateY(35px); }
+.r7  { transform: translateX(-50%) rotate(315deg) translateY(35px); }
+@keyframes rayRotate {
+  from { transform: translateX(-50%) rotate(var(--r, 0deg)) translateY(35px); }
+  to   { transform: translateX(-50%) rotate(calc(var(--r, 0deg) + 360deg)) translateY(35px); }
+}
+
+/* Photon beam */
+#photon-beam {
+  position: absolute;
+  top: 110px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 0;
+  overflow: visible;
+}
+.photon {
+  position: absolute;
+  left: -6px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #FFFFA0, #FFE040 50%, transparent 75%);
+  animation: photonFall 1.8s ease-in infinite;
+  opacity: 0;
+}
+#ph1 { animation-delay: 0s; }
+#ph2 { animation-delay: 0.6s; }
+#ph3 { animation-delay: 1.2s; }
+
+@keyframes photonFall {
+  0%   { top: 0;    opacity: 0;   }
+  10%  { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { top: 350px; opacity: 0; }
+}
+
+/* Corn leaf */
+#corn-leaf {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 280px;
+  height: 380px;
+  filter: drop-shadow(0 -4px 20px rgba(50,150,20,0.3));
+  animation: leafSway 4s ease-in-out infinite;
+}
+@keyframes leafSway {
+  0%,100% { transform: translateX(-50%) rotate(-1deg); }
+  50%      { transform: translateX(-50%) rotate(1.5deg); }
+}
+
+/* Leaf impact flash */
+#leaf-flash {
+  position: absolute;
+  bottom: 180px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,240,80,0.9), transparent 70%);
+  animation: leafImpact 1.8s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes leafImpact {
+  0%,60%  { opacity: 0; transform: translateX(-50%) scale(0.5); }
+  70%     { opacity: 1; transform: translateX(-50%) scale(1.2); }
+  80%     { opacity: 0.8; transform: translateX(-50%) scale(0.9); }
+  100%    { opacity: 0; }
+}
+
+/* ══════════════════════════════════════
+   SCENE 1 — CÉLULAS
+══════════════════════════════════════ */
+.bg-cells {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 50%, #0A2808 0%, #041404 100%);
+}
+#cell-view {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Zoom ring pulse */
+#zoom-ring {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 0; height: 0;
+  border-radius: 50%;
+  border: 3px solid rgba(90,176,48,0.5);
+  animation: zoomPulse 2s ease-out infinite;
+  pointer-events: none;
+}
+@keyframes zoomPulse {
+  0%   { width: 60px;  height: 60px;  opacity: 0.8; transform: translate(-50%,-50%); }
+  100% { width: 500px; height: 500px; opacity: 0;   transform: translate(-50%,-50%); }
+}
+
+/* ══════════════════════════════════════
+   SCENE 2 — CLOROPLASTO INTERIOR
+══════════════════════════════════════ */
+.chloro-bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 60%, #082A04 0%, #020C01 100%);
+}
+#thylakoid-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* ══════════════════════════════════════
+   SCENE 3 — FOTOSISTEMA CLOSE-UP
+══════════════════════════════════════ */
+.membrane-bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 40%, #0A2A06 0%, #020808 100%);
+}
+#photosystem-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* ══════════════════════════════════════
+   SCENE 4 — FINAL / CALL TO ACTION
+══════════════════════════════════════ */
+.final-bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 40%, #1A3A0A 0%, #080C04 100%);
+}
+
+#particles-final {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.particle-dot {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(90,176,48,0.6);
+  animation: floatUp linear infinite;
+}
+@keyframes floatUp {
+  from { transform: translateY(0) scale(1); opacity: 0.7; }
+  to   { transform: translateY(-100vh) scale(0.3); opacity: 0; }
+}
+
+#final-content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+/* Notebook card */
+.notebook-card {
+  background: #FDF6E3;
+  color: #2C1F0E;
+  border-radius: 6px;
+  padding: 36px 44px;
+  max-width: 540px;
+  width: 100%;
+  text-align: center;
+  border: 2px solid #A07840;
+  box-shadow:
+    6px 6px 0 rgba(0,0,0,0.3),
+    12px 12px 30px rgba(0,0,0,0.4);
+  position: relative;
+  transform: rotate(-0.5deg);
+  animation: cardBreathe 3s ease-in-out infinite;
+}
+@keyframes cardBreathe {
+  0%,100% { transform: rotate(-0.5deg) scale(1); }
+  50%      { transform: rotate(0.3deg) scale(1.005); }
+}
+
+/* Tape strip at top */
+.notebook-card::before {
+  content: '';
+  position: absolute;
+  top: -10px; left: 50%;
+  transform: translateX(-50%) rotate(-1deg);
+  width: 100px; height: 22px;
+  background: rgba(220,200,140,0.7);
+  border-radius: 2px;
+}
+
+.nb-eyebrow {
+  font-family: 'Special Elite', monospace;
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: #8A7050;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.nb-title {
+  font-family: 'Permanent Marker', cursive;
+  font-size: clamp(30px, 5vw, 52px);
+  color: #3A6B25;
+  line-height: 1.05;
+  margin-bottom: 18px;
+  text-shadow: 2px 2px 0 #F4E6B8;
+}
+
+.nb-body {
+  font-family: 'Patrick Hand', cursive;
+  font-size: 16px;
+  line-height: 1.9;
+  color: #4A3520;
+  margin-bottom: 20px;
+}
+.nb-body strong { color: #3A6B25; }
+.nb-body em { color: #C07828; font-style: normal; }
+
+.nb-divider {
+  width: 60%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #C07828, transparent);
+  margin: 0 auto 22px;
+  border-radius: 2px;
+}
+
+/* Play button */
+.play-btn {
+  background: #3A6B25;
+  color: #fff;
+  border: 2px solid #5A8A35;
+  border-radius: 6px;
+  font-family: 'Caveat', cursive;
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: 1px;
+  padding: 14px 36px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 3px 3px 0 rgba(0,0,0,0.3);
+  transition: transform 0.1s, box-shadow 0.1s, filter 0.2s;
+  margin-bottom: 14px;
+}
+.play-btn:hover {
+  filter: brightness(1.1);
+}
+.play-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 rgba(0,0,0,0.3);
+}
+.btn-icon {
+  font-size: 24px;
+  animation: btnIconBounce 1.4s ease-in-out infinite;
+}
+@keyframes btnIconBounce {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-5px); }
+}
+
+.nb-hint {
+  font-family: 'Patrick Hand', cursive;
+  font-size: 11px;
+  color: #8A7050;
+  letter-spacing: 1px;
+}
+
+/* ══════════════════════════════════════
+   CAPTIONS (shared)
+══════════════════════════════════════ */
+.caption {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  padding: 0 20px 30px;
+  max-width: 700px;
+  width: 100%;
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  pointer-events: none;
+}
+.caption.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.cap-eyebrow {
+  font-family: 'Special Elite', monospace;
+  font-size: 11px;
+  letter-spacing: 4px;
+  color: rgba(90,176,48,0.75);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.cap-main {
+  font-family: 'Caveat', cursive;
+  font-size: clamp(18px, 3.5vw, 28px);
+  font-weight: 600;
+  color: rgba(255,255,255,0.92);
+  line-height: 1.4;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+}
+
+.cap-main .hi  { color: #5AB030; }
+.cap-main .hi2 { color: #E8A030; }
+
+/* ══════════════════════════════════════
+   MOBILE
+══════════════════════════════════════ */
+@media (max-width: 600px) {
+  .notebook-card {
+    padding: 26px 24px;
+    border-radius: 4px;
+  }
+  .play-btn {
+    font-size: 19px;
+    padding: 12px 26px;
+  }
+  .cap-main { font-size: 17px; }
+  #corn-leaf { width: 200px; height: 280px; }
+  .sun { width: 80px; height: 80px; top: 30px; }
+  .sun-core { width: 40px; height: 40px; }
+}
