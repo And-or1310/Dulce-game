@@ -1149,7 +1149,7 @@ kbd {
   /* ── HUD: centrado, sin padding izquierdo de espiral ── */
   #main-game {
     /* HUD 52px + stage 1fr + desk (dialogue+botones) 155px */
-    grid-template-rows: 52px 1fr 200px;
+    grid-template-rows: 52px 1fr 245px;
   }
 
   #ui-header {
@@ -1211,7 +1211,7 @@ kbd {
 
   /* ── Desk: dialogue arriba + safe bar botones abajo ── */
   #desk {
-    height: 200px;
+    height: 245px;
     grid-template-columns: 1fr;
     grid-template-rows: 1fr 68px;
     border-top: 2px solid var(--amber);
@@ -1227,9 +1227,18 @@ kbd {
     margin: 8px 12px 4px 12px;
     padding: 7px 11px;
     border-top-width: 2px;
+    overflow-y: auto !important;
+    max-height: 160px;
   }
   .prof-name      { font-size: 13px; margin-bottom: 3px; padding-bottom: 3px; }
-  #prof-talk      { font-size: 13px; min-height: 28px; -webkit-line-clamp: 2; }
+  #prof-talk      {
+    font-size: 13px;
+    min-height: 28px;
+    display: block !important;
+    -webkit-line-clamp: unset !important;
+    -webkit-box-orient: unset !important;
+    overflow: visible !important;
+  }
 
   /* Controls = safe bar con botones grandes */
   .controls {
@@ -1301,9 +1310,23 @@ kbd {
     height: 120px;
     grid-template-rows: 1fr 52px;
   }
-  #dialogue-box   { margin: 5px 8px 2px 8px; padding: 5px 9px; }
-  #prof-talk      { font-size: 11px; -webkit-line-clamp: 1; }
-  .prof-name      { font-size: 11px; margin-bottom: 2px; }
+  #dialogue-box {
+    display: block;
+    margin: 8px 12px 4px 12px;
+    padding: 7px 11px;
+    border-top-width: 2px;
+    overflow-y: auto;
+    max-height: 160px;
+  }
+  .prof-name      { font-size: 13px; margin-bottom: 3px; padding-bottom: 3px; }
+  #prof-talk      {
+    font-size: 13px;
+    min-height: 28px;
+    overflow: visible;
+    display: block;
+    -webkit-line-clamp: unset;
+    -webkit-box-orient: unset;
+  }
   .controls       { padding: 6px 16px; gap: 12px; }
   .stamp-btn      { font-size: 15px; padding: 8px 8px; }
 }
