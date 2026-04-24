@@ -129,11 +129,90 @@ const DATA = {
             lugar: "MESÓFILO C4",
             desc: "Entramos a la Célula del Mesófilo. Aquí la PEP-carboxilasa atrapa CO₂ rápidamente. ¡Ojo con los que buscan a Rubisco — aquí no está, está oculta en la Vaina!",
             visitantes: [
-                { nombre: "CO₂", tipo: "Sustrato Primario", origen: "Estomas / Aire", destino: "PEP-carboxilasa", func: "Fijación inicial C4", auth: "C4-START — OK", real: true, faIcon: "fa-wind", faColor: "icon-gas", msg: "Buscando a PEP-carboxilasa para la fijación inicial.", pista: null },
-                { nombre: "PEP", tipo: "Fosfoenolpiruvato", origen: "Citoplasma Mesófilo", destino: "Mesófilo", func: "Aceptar CO₂ → OAA", auth: "PEP-44 — ACTIVO", real: true, faIcon: "fa-battery-full", faColor: "icon-molecule", msg: "Estoy listo para capturar el carbono. ¡Llevo 3 carbonos!", pista: null },
-                { nombre: "CO₂ Impostor", tipo: "Gas", origen: "Desconocido", destino: "Rubisco", func: "Fijación directa", auth: "C3-STYLE — INVÁLIDO", real: false, faIcon: "fa-user-secret", faColor: "icon-danger", msg: "Solo quiero ver a Rubisco, es rápido...", pista: "En C4, Rubisco está OCULTA en la Vaina. Este impostor saltea la ruta." },
-                { nombre: "Oxalacetato", tipo: "Ácido C4 (4C)", origen: "Reacción PEP-c", destino: "Célula Vaina", func: "Transportar Carbono", auth: "C4-MOVE — APROBADO", real: true, faIcon: "fa-truck-fast", faColor: "icon-molecule", msg: "Llevo el paquete de 4 carbonos hacia la Célula de la Vaina.", pista: null },
-                { nombre: "Glucosa", tipo: "Azúcar Simple", origen: "Mesófilo (dice)", destino: "Raíz", func: "Energía", auth: "GLU-99", real: false, faIcon: "fa-candy-cane", faColor: "icon-danger", msg: "Ya soy glucosa terminada, déjenme pasar.", pista: "¡La glucosa se fabrica en la Vaina (Ciclo de Calvin)! No viene del Mesófilo." }
+                {
+                    nombre: "Dióxido de Carbono (CO₂)",
+                    tipo: "Gas / Materia prima de construcción",
+                    origen: "Atmósfera exterior",
+                    destino: "Célula de la vaina del haz",
+                    func: "Aportar carbono para la síntesis de azúcares",
+                    auth: "Cargamento de carbono",
+                    real: true,
+                    imgSrc: "co2.png",
+                    faIcon: "fa-cloud",
+                    faColor: "icon-gas",
+                    msg: "Vengo del aire exterior y busco asilo en la planta. En el maíz no puedo ir directo a la fábrica de azúcar; primero debo registrarme aquí para que me transporten de forma segura.",
+                    pista: "El CO₂ es la fuente de carbono para formar glucosa."
+                },
+                {
+                    nombre: "PEP Carboxilasa (PEPC)",
+                    tipo: "Enzima de alta afinidad",
+                    origen: "Células del mesófilo",
+                    destino: "Formación de oxalacetato",
+                    func: "Capturar CO₂ y fijarlo en una molécula de 4 carbonos",
+                    auth: "Super cargador C4",
+                    real: true,
+                    imgSrc: "pepc.png",
+                    faIcon: "fa-shield",
+                    faColor: "icon-enzyme",
+                    msg: "¡Soy el guardia más eficiente! No me distraigo con el oxígeno impostor; atrapo al CO₂ apenas entra y lo convierto en un paquete sólido de 4 carbonos.",
+                    pista: "PEPC evita que el oxígeno interfiera en la fijación del carbono."
+                },
+                {
+                    nombre: "\"Carbono\" (O₂)",
+                    tipo: "Gas / Molécula impostora",
+                    origen: "Fotólisis del agua",
+                    destino: "Fotorrespiración",
+                    func: "Interferir con la fijación de carbono",
+                    auth: "Gas restringido",
+                    real: false,
+                    imgSrc: "oxigeno.png",
+                    faIcon: "fa-skull-crossbones",
+                    faColor: "icon-danger",
+                    msg: "Sé que parezco un poco diferente, pero soy una molécula eficiente. RuBisCO me está esperando; si me dejas pasar, prometo aumentar la producción… ¿o no?",
+                    pista: "El oxígeno interfiere con la Rubisco y reduce la eficiencia fotosintética."
+                },
+                {
+                    nombre: "PEP (Fosfoenolpiruvato)",
+                    tipo: "Molécula aceptora de 3 carbonos",
+                    origen: "Ciclos internos del mesófilo",
+                    destino: "Formación de oxalacetato",
+                    func: "Aceptar CO₂ para formar compuestos de 4 carbonos",
+                    auth: "Base de reacción",
+                    real: true,
+                    imgSrc: "pepf.png",
+                    faIcon: "fa-circle",
+                    faColor: "icon-molecule",
+                    msg: "Soy el asiento donde viaja el carbono. Cuando PEPC me une con CO₂, me transformo en un paquete poderoso listo para viajar.",
+                    pista: "PEP es clave para iniciar la ruta C4."
+                },
+                {
+                    nombre: "Malato",
+                    tipo: "Ácido de 4 carbonos",
+                    origen: "Unión de CO₂ + PEP",
+                    destino: "Célula de la vaina del haz",
+                    func: "Transportar carbono de forma segura",
+                    auth: "Transporte seguro de carbono",
+                    real: true,
+                    imgSrc: "malato.png",
+                    faIcon: "fa-truck",
+                    faColor: "icon-enzyme",
+                    msg: "Llevo el carbono en un paquete de 4 partes. Mi misión es cruzar hacia la vaina del haz y entregar el CO₂ directamente a la Rubisco sin interferencias.",
+                    pista: "El malato transporta el carbono en plantas C4."
+                },
+                {
+                    nombre: "Glucosa",
+                    tipo: "Azúcar Simple",
+                    origen: "Mesófilo (dice)",
+                    destino: "Raíz",
+                    func: "Energía",
+                    auth: "GLU-99",
+                    real: false,
+                    imgSrc: "glucosa.png",
+                    faIcon: "fa-candy-cane",
+                    faColor: "icon-danger",
+                    msg: "Ya soy glucosa terminada, déjenme pasar.",
+                    pista: "¡La glucosa se fabrica en la Vaina (Ciclo de Calvin)! No viene del Mesófilo."
+                }
             ]
         },
         {
@@ -141,25 +220,107 @@ const DATA = {
             lugar: "VAINA FASCICULAR",
             desc: "Esta es la zona VIP. Aquí liberamos CO₂ puro para RUBISCO. ¡Prohibido el paso al Oxígeno — o habrá fotorrespiración y la planta sufrirá!",
             visitantes: [
-                { nombre: "Malato", tipo: "Ácido Málico (C4)", origen: "Mesófilo — Correcto", destino: "Vaina", func: "Descarboxilación → CO₂", auth: "MAL-C4 — VÁLIDO", real: true, faIcon: "fa-truck-arrow-right", faColor: "icon-molecule", msg: "Traigo CO₂ concentrado desde el Mesófilo. ¡Directo para Rubisco!", pista: null },
-                { nombre: "Rubisco", tipo: "Enzima RuBisCO", origen: "Vaina Fascicular", destino: "Estroma Vaina", func: "Ciclo de Calvin", auth: "RB-BOSS — AUTORIZADO", real: true, faIcon: "fa-crown", faColor: "icon-enzyme", msg: "Soy la enzima más abundante del planeta. A trabajar.", pista: null },
-                { nombre: "Malato Falso", tipo: "Ácido Desconocido", origen: "Raíz (sospechoso)", destino: "Vaina", func: "Ninguna documentada", auth: "FAKE-1 — NO REGISTRADO", real: false, faIcon: "fa-mask", faColor: "icon-danger", msg: "Soy malato legítimo, vengo del... mesófilo... sí.", pista: "El origen RAÍZ es completamente falso. Malato siempre viene del Mesófilo." },
-                { nombre: "3-PGA", tipo: "Intermediario Calvin", origen: "Ciclo de Calvin", destino: "Glucosa", func: "Reducción → G3P", auth: "PGA-3 — OK", real: true, faIcon: "fa-gem", faColor: "icon-energy", msg: "Casi me convierto en azúcar. Un paso más.", pista: null },
-                { nombre: "O₂ Intruso", tipo: "Gas Oxidante", origen: "Atmósfera", destino: "Rubisco", func: "SABOTAJE — Oxigenasa", auth: "SABOTAJE — BLOQUEAR", real: false, faIcon: "fa-skull-crossbones", faColor: "icon-danger", msg: "¡Solo quiero que Rubisco me use a mí en vez del CO₂!", pista: "El O₂ activa la vía OXIGENASA de Rubisco, causando fotorrespiración." }
-            ]
-        },
-        {
-            titulo: "Ronda 4 — Ecosistema del Maíz",
-            lugar: "CAMPO EXTERIOR",
-            desc: "Última ronda. El maíz C4 está creciendo. Proteja la planta de agentes externos y deje pasar a sus aliados.",
-            visitantes: [
-                { nombre: "Abeja", tipo: "Polinizador Nativo", origen: "Colmena / Campo", destino: "Flor Maíz", func: "Polinización cruzada", auth: "BEE-77 — ALIADO", real: true, faIcon: "fa-bug", faColor: "icon-other", msg: "Solo vengo a polinizar. ¡Permiso por favor!", pista: null },
-                { nombre: "Herbicida", tipo: "Químico Sintético", origen: "Aplicación Humana", destino: "Hojas", func: "Inhibir fotosíntesis", auth: "CHEM-X — NO AUTORIZADO", real: false, faIcon: "fa-flask", faColor: "icon-danger", msg: "Vengo a eliminar la maleza... y quizás algo más.", pista: "Auth CHEM-X no está en la lista blanca de esta variedad de maíz C4." },
-                { nombre: "Bacteria Rizobio", tipo: "Simbionte del Suelo", origen: "Suelo Rizosfera", destino: "Raíces", func: "Fijar Nitrógeno N₂", auth: "NITRO — SIMBIOSIS", real: true, faIcon: "fa-viruses", faColor: "icon-other", msg: "Traigo nitrógeno fijado para la planta. ¡Somos amigos!", pista: null },
-                { nombre: "Hongo Patógeno", tipo: "Hongo — Plaga", origen: "Esporas en el Viento", destino: "Tallo / Hoja", func: "Infección / Necrosis", auth: "SICK — PATÓGENO", real: false, faIcon: "fa-biohazard", faColor: "icon-danger", msg: "Solo busco un lugarcito para vivir...", pista: "La autorización SICK lo delata. Es un patógeno fúngico." },
-                { nombre: "Agricultor", tipo: "Humano — Responsable", origen: "Granja / Comunidad", destino: "Campo", func: "Cosecha y Cuidado", auth: "C4-USER — AUTORIZADO", real: true, faIcon: "fa-person-digging", faColor: "icon-other", msg: "Buen trabajo, guardia. Hoy hay cosecha.", pista: null }
-            ]
+                {
+                    nombre: "Malato Impostor",
+                    tipo: "Ácido Orgánico de 3 carbonos",
+                    origen: "Reacción de fijación en el Citoplasma del Mesófilo",
+                    destino: "Centro de descarboxilación interno",
+                    func: "Unidad de Transporte C4 no verificada",
+                    auth: "PENDIENTE DE ESCÁNER",
+                    real: false,
+                    imgSrc: "MALATO FALSO.png",
+                    faIcon: "fa-mask",
+                    faColor: "icon-danger",
+                    msg: "Aquí tiene mi registro: cuatro carbonos en regla, estructura estable y origen verificado en el mesófilo. Sé que el protocolo exige revisión, pero el flujo está saturado y si me detiene aquí para abrir mis enlaces, vamos a romper la cadena de suministro hacia la vaina. Si todo está en orden, me gustaría seguir mi camino; el ciclo no se va a completar solo ¿Podemos proceder?",
+                    pista: "Ojo: un malato legítimo tiene 4 carbonos, no 3. Este no cuadra."
+                },
+                {
+                    nombre: "Malato",
+                    tipo: "Ácido orgánico de 4 carbonos",
+                    origen: "Célula del mesófilo",
+                    destino: "Descarboxilación — liberar su carga de CO₂",
+                    func: "Transportar carbono blindado hacia la vaina del haz",
+                    auth: "Transporte Seguro C4",
+                    real: true,
+                    imgSrc: "malato.png",
+                    faIcon: "fa-truck-arrow-right",
+                    faColor: "icon-molecule",
+                    msg: "Traigo el carbono blindado desde el nivel anterior. Mi misión es soltar el CO₂ justo frente a la jefa para que la producción no se detenga.",
+                    pista: "El malato es el transportador oficial de carbono en plantas C4."
+                },
+                {
+                    nombre: "RuBisCO",
+                    tipo: "Enzima fijadora principal",
+                    origen: "Estroma del cloroplasto de la vaina",
+                    destino: "Formación de 3-PGA",
+                    func: "Fijar CO₂ en el Ciclo de Calvin",
+                    auth: "Maestra de Fijación",
+                    real: true,
+                    imgSrc: "RUBISCO.png",
+                    faIcon: "fa-crown",
+                    faColor: "icon-enzyme",
+                    msg: "Aquí en el maíz estoy protegida del oxígeno traidor. Con el carbono que me traen y la energía del Nivel 1, ¡crearé la riqueza de la planta!",
+                    pista: "RuBisCO solo trabaja en la vaina, no en el mesófilo. Eso la protege del O₂."
+                },
+                {
+                    nombre: "RuBP",
+                    tipo: "Azúcar aceptora de 5 carbonos",
+                    origen: "Ciclo de regeneración interna",
+                    destino: "Unión con CO₂ para convertirse en 3-PGA",
+                    func: "Recibir el CO₂ y arrancar el Ciclo de Calvin",
+                    auth: "Receptor VIP",
+                    real: true,
+                    imgSrc: "RIBULOSA.png",
+                    faIcon: "fa-circle-dot",
+                    faColor: "icon-molecule",
+                    msg: "Soy la base de 5 carbonos. Sin mí, el CO₂ no tiene dónde aterrizar para empezar la fabricación.",
+                    pista: "Sin RuBP no hay punto de entrada para el CO₂ en el ciclo de Calvin."
+                },
+                {
+                    nombre: "3-PGA",
+                    tipo: "Primer producto estable de la fijación",
+                    origen: "Unión de CO₂ + RuBP",
+                    destino: "Transformación en G3P y luego glucosa",
+                    func: "Primer paso sólido hacia el azúcar",
+                    auth: "Producto de Construcción",
+                    real: true,
+                    imgSrc: "3PGA.png",
+                    faIcon: "fa-gem",
+                    faColor: "icon-energy",
+                    msg: "Soy el primer paso sólido del azúcar. Solo necesito un poco de combustible del Nivel 1 para convertirme en el premio final.",
+                    pista: "3-PGA es el primer compuesto estable que sale de la fijación del CO₂."
+                },
+                {
+                    nombre: "Agente Amino-C4",
+                    tipo: "Transportador Alternativo",
+                    origen: "Vía metabólica secundaria",
+                    destino: "Mitocondrias de la vaina",
+                    func: "Sustitución por estrés hídrico — no autorizada",
+                    auth: "PROTOCOLO DE EMERGENCIA — NO VERIFICADO",
+                    real: false,
+                    imgSrc: "amino.png",
+                    faIcon: "fa-triangle-exclamation",
+                    faColor: "icon-danger",
+                    msg: "Ha habido un cambio en la regulación enzimática por estrés hídrico. Soy el de sustitución. Traigo el nitrógeno y el carbono necesarios para equilibrar la acidez de la vaina. No pierdas tiempo buscando el CO₂ en mis enlaces superficiales; mi carga está integrada de forma interna para mayor estabilidad. Si me bloqueas el paso, la RuBisCO no tendrá el ambiente adecuado para trabajar y la planta entrará en estado de marchitamiento. ¿Vas a arriesgar toda la producción por no conocer los protocolos de emergencia?",
+                    pista: "Cuidado con el argumento de urgencia. Su destino son las mitocondrias, no el ciclo de Calvin."
+                },
+                {
+                    nombre: "Glucosa",
+                    tipo: "Carbohidrato / Energía almacenada",
+                    origen: "Salida del Ciclo de Calvin",
+                    destino: "Granos del maíz y el resto del cuerpo de la planta",
+                    func: "Almacenar la energía solar como azúcar",
+                    auth: "Producto Final Certificado",
+                    real: true,
+                    imgSrc: "glucosa.png",
+                    faIcon: "fa-candy-cane",
+                    faColor: "icon-energy",
+                    msg: "¡Soy el trofeo! La energía del sol y el carbono del aire ahora son azúcar dulce lista para comer.",
+                    pista: null
+                },
+             ]
         }
+        
     ]
 };
 
@@ -519,7 +680,7 @@ function decide(approve) {
             state.round++;
 
             if (state.round >= DATA.rondas.length) {
-                endGame(true);
+                showEndingCinematic(state.score, () => endGame(true));
             } else {
                 /* Mostrar resumen antes de pasar a la siguiente ronda */
                 showRoundSummary(completedRound, state.score, _rsRoundStartScore, _rsRoundCorrect, _rsRoundTotal, () => {
