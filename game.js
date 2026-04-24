@@ -202,7 +202,7 @@ const DATA = {
                 {
                     nombre: "Glucosa",
                     tipo: "Azúcar Simple",
-                    origen: "Mesófilo (dice)",
+                    origen: "Mesófilo",
                     destino: "Raíz",
                     func: "Energía",
                     auth: "GLU-99",
@@ -226,7 +226,7 @@ const DATA = {
                     origen: "Reacción de fijación en el Citoplasma del Mesófilo",
                     destino: "Centro de descarboxilación interno",
                     func: "Unidad de Transporte C4 no verificada",
-                    auth: "PENDIENTE DE ESCÁNER",
+                    auth: "Pendiente de escáner",
                     real: false,
                     imgSrc: "MALATO FALSO.png",
                     faIcon: "fa-mask",
