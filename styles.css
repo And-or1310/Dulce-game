@@ -1149,7 +1149,7 @@ kbd {
   /* ── HUD: centrado, sin padding izquierdo de espiral ── */
   #main-game {
     /* HUD 52px + stage 1fr + desk (dialogue+botones) 155px */
-    grid-template-rows: 52px 1fr 155px;
+    grid-template-rows: 52px 1fr 200px;
   }
 
   #ui-header {
@@ -1211,7 +1211,7 @@ kbd {
 
   /* ── Desk: dialogue arriba + safe bar botones abajo ── */
   #desk {
-    height: 155px;
+    height: 200px;
     grid-template-columns: 1fr;
     grid-template-rows: 1fr 68px;
     border-top: 2px solid var(--amber);
